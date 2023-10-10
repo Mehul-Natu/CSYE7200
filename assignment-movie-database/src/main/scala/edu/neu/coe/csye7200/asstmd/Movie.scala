@@ -1,5 +1,6 @@
 package edu.neu.coe.csye7200.asstmd
 
+import java.util.OptionalInt
 import scala.io.Source
 import scala.util._
 
@@ -102,7 +103,7 @@ object Movie extends App {
 // TO BE IMPLEMENTED 
 
       // STUB
-       Try(???)
+      Try(Movie(w.split(",")))
       // END
     }
   }
@@ -126,11 +127,7 @@ object Movie extends App {
     // Hint: form a new list which is consisted by the elements in list in position indices. Int* means array of Int.
     // 6 points
     val result: Seq[String] = {
-      // TO BE IMPLEMENTED 
-
-      // STUB
-       ???
-      // END
+      for (i <- indices) yield list(i)
     }
     result.toList
   }
@@ -211,16 +208,10 @@ object Rating {
    */
   // Hint: This should similar to apply method in Object Name. The parameter of apply in case match should be same as case class Rating
   // 13 points
-  def apply(s: String): Rating = {
-// TO BE IMPLEMENTED 
-
-
-
-
-
-    // STUB
-     ???
-    // END
+  def apply(s: String): Rating = (for (ws <- rRating.unapplySeq(s)) yield for (w <- ws) yield Option(w))
+  match {
+    case Some(Seq(Some(code), _, maybeAge)) => Rating(code, maybeAge.flatMap(_.toIntOption))
+    case x => throw ParseException(s"parse error in Rating: $s (parsed as $x)")
   }
 }
 
