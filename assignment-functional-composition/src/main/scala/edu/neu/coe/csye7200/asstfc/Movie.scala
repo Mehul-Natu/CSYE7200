@@ -101,13 +101,15 @@ object Movie extends App {
   //Hint: You may refer to the slides discussed in class for how to serialize object to json
   object MoviesProtocol extends DefaultJsonProtocol {
     // 20 points
-    // TO BE IMPLEMENTED 
-
-
-
-
-
-
+    // TO BE IMPLEMENTED
+    import spray.json._
+    implicit val formatProtocol = jsonFormat4(Format.apply)
+    implicit val productionProtocol = jsonFormat4(Production.apply)
+    implicit val ratingProtocol = jsonFormat2(Rating.apply)
+    implicit val reviewsProtocol = jsonFormat7(Reviews.apply)
+    implicit val nameProtocol = jsonFormat4(Name.apply)
+    implicit val principalProtocol = jsonFormat2(Principal.apply)
+    implicit val movieProtocol = jsonFormat11(Movie.apply)
 
     // STUB
     // END SOLUTION
@@ -130,10 +132,11 @@ object Movie extends App {
   //Hint: Serialize the input to Json format and deserialize back to Object, check the result is still equal to original input.
   def testSerializationAndDeserialization(ms: Seq[Movie]): Boolean = {
     // 5 points
-    // TO BE IMPLEMENTED 
-
-
-???
+    // TO BE IMPLEMENTED
+    import MoviesProtocol._
+    val jsonStringObjects = ms.map(_.toJson.toString())
+    val deserializedMovies = jsonStringObjects.map(_.parseJson.convertTo[Movie])
+    ms.equals(deserializedMovies)
   }
 
   def getMoviesFromCountry(country: String, movies: Iterator[Try[Movie]]): Try[Seq[Movie]] = {

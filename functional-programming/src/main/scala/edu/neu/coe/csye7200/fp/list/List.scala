@@ -56,6 +56,8 @@ trait List[+A] extends (Int => Option[A]) {
 
   def foldLeft[B](z: B)(f: (B, A) => B): B
 
+  def foldRight[B](z: B)(f: (A, B) => B): B
+
   def sum[B >: A : Numeric]: B = foldLeft(implicitly[Numeric[B]].zero)(implicitly[Numeric[B]].plus(_, _))
 
   def sumByIteration[B >: A : Numeric] = {
@@ -101,6 +103,8 @@ case object Nil extends List[Nothing] {
   def x9(f: Nothing => Unit): Unit = ()
 
   def foldLeft[B](z: B)(f: (B, Nothing) => B): B = z
+
+  def foldRight[B](z: B)(f: (Nothing, B) => B): B = z
 }
 
 case class Cons[+A](head: A, tail: List[A]) extends List[A] {
@@ -170,6 +174,16 @@ case class Cons[+A](head: A, tail: List[A]) extends List[A] {
   def x9(f: A => Unit): Unit = { f(head); tail.x9(f) }
 
   def foldLeft[B](z: B)(f: (B, A) => B): B = tail.foldLeft(f(z, head))(f)
+
+  //def foldRight[B](z: B)(f: (B, Nothing) => B): B = z
+  def foldRight[B](z: B)(f: (A, B) => B): B = {
+    @tailrec
+    def inner(as: List[A], acc: B): B = as match {
+      case Nil => acc
+      case Cons(h, t) => inner(t, f(h, acc))
+    }
+    inner(this, z)
+  }
 }
 
 abstract class Counter[-A] extends (A => Int)
