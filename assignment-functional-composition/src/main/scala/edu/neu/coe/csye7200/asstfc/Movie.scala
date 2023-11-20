@@ -111,7 +111,7 @@ object Movie extends App {
     implicit val principalProtocol = jsonFormat2(Principal.apply)
     implicit val movieProtocol = jsonFormat11(Movie.apply)
 
-    // STUB
+    // STUBsni
     // END SOLUTION
   }
 
@@ -134,9 +134,7 @@ object Movie extends App {
     // 5 points
     // TO BE IMPLEMENTED
     import MoviesProtocol._
-    val jsonStringObjects = ms.map(_.toJson.toString())
-    val deserializedMovies = jsonStringObjects.map(_.parseJson.convertTo[Movie])
-    ms.equals(deserializedMovies)
+    ms == ms.map(_.toJson.convertTo[Movie])
   }
 
   def getMoviesFromCountry(country: String, movies: Iterator[Try[Movie]]): Try[Seq[Movie]] = {
