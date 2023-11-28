@@ -81,6 +81,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
                 val usf: Future[Seq[URL]] = WebCrawler.wget(us1)(x => exceptions += x)
                 whenReady(usf, timeout(Span(12, Seconds))) {
                     us2 =>
+                        println(us2.distinct)
                         us2.distinct.size shouldBe 32
                         exceptions.size shouldBe 0
                 }
@@ -90,7 +91,6 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
 
     behavior of "crawl(Seq[URL])"
 
-    // TODO Move this into a functional spec
     it should s"succeed for $goodURL, max 4" taggedAs Slow in {
         val max = 4
         val expected = 25
@@ -98,7 +98,7 @@ class WebCrawlerSpec extends AnyFlatSpec with should.Matchers with Futures with 
         val uys = for (arg <- args) yield Try(new URL(arg))
         val usft = for {us <- MonadOps.sequence(uys)} yield WebCrawler(max).crawl(us)
         val usf = MonadOps.flatten(usft)
-        whenReady(usf, timeout(Span(30, Seconds))) { s => Assertions.assert(s.length == expected) }
+        whenReady(usf, timeout(Span(20, Seconds))) { s => Assertions.assert(s.length == expected) }
     }
 
     behavior of "Unstring"

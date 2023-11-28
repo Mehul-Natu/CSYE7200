@@ -144,7 +144,6 @@ object WebCrawler extends App {
             for (n <- ns \\ "a" map (_ \@ "href")) yield
                 for { url <- createURL(Some(url), n)
                       validatedUrl <- validateURL(url) } yield validatedUrl
-
         }
 
         def getLinks(g: String): Try[Seq[URL]] = {

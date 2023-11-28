@@ -249,7 +249,7 @@ object MonadOps {
    * @tparam X the underlying type.
    * @return if xe is a Right(x) then Some(x) else None.
    */
-  def asOption[X](xe: Either[Throwable, X]): Option[X] = asOption(xe)
+  def asOption[X](xe: Either[Throwable, X]): Option[X] = xe.toOption
 // TO BE IMPLEMENTED 
 
 
